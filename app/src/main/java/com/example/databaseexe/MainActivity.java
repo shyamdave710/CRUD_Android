@@ -47,15 +47,23 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, "Please fill all values", Toast.LENGTH_SHORT).show();
                     }
                     else {
-                        db.execSQL("INSERT INTO try VALUES ('" + un.getText() + "', '" + pwd.getText() + "');");
-                        un.setText("");
-                        pwd.setText("");
-                        Toast.makeText(MainActivity.this, "Data Saved", Toast.LENGTH_SHORT).show();
+                        Cursor rs= db.rawQuery("SELECT UserName FROM try WHERE UserName='"+un.getText()+"'",null);
+                        int c= rs.getCount();
+                        if(c==1)
+                        {
+                            Toast.makeText(MainActivity.this, "UserName already Exists", Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            db.execSQL("INSERT INTO try VALUES ('" + un.getText() + "', '" + pwd.getText() + "');");
+                            un.setText("");
+                            pwd.setText("");
+                            Toast.makeText(MainActivity.this, "Data Saved", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
             });
 
-            //Display Record
+            //Display Record(LitView)
             displayBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -63,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
-            //Display Single data
+            //Display Single data(Next Previous Button)
             data.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -71,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
-            //button for to page to display in spinner control
+            //button for to page to display in spinner control for Update and delete
             upd.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -94,12 +102,22 @@ public class MainActivity extends AppCompatActivity {
             save.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    db.execSQL("UPDATE try set UserName='"+un.getText().toString()+"', Password='"+pwd.getText().toString()+"' WHERE UserName='"+user+"'");
+                    if (un.getText().toString().isEmpty() || pwd.getText().toString().isEmpty()) {
+                        Toast.makeText(MainActivity.this, "Please fill all values", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Cursor rs = db.rawQuery("SELECT UserName FROM try WHERE UserName='" + un.getText() + "'", null);
+                        int c = rs.getCount();
+                        if (c == 1) {
+                            Toast.makeText(MainActivity.this, "UserName already Exists", Toast.LENGTH_SHORT).show();
+                        } else {
+                            db.execSQL("UPDATE try set UserName='" + un.getText().toString() + "', Password='" + pwd.getText().toString() + "' WHERE UserName='" + user + "'");
 
-                    Toast.makeText(MainActivity.this ,"Data Updated", Toast.LENGTH_LONG).show();
-                    Intent go=new Intent(MainActivity.this, display2.class);
-                    startActivity(go);
-                    finish();
+                            Toast.makeText(MainActivity.this, "Data Updated", Toast.LENGTH_LONG).show();
+                            Intent go = new Intent(MainActivity.this, display2.class);
+                            startActivity(go);
+                            finish();
+                        }
+                    }
                 }
             });
         }
