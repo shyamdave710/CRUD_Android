@@ -32,7 +32,7 @@ public class display extends AppCompatActivity {
         if (resultset.moveToFirst()) {
             do {
 
-                nm +="Name : " +resultset.getString(0)+"Password : "+ resultset.getString(1)+",";
+                nm +="Name : " +resultset.getString(0)+" | Password : "+ resultset.getString(1)+",";
 
             } while (resultset.moveToNext());
             // moving our cursor to next.
